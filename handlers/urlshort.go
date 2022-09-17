@@ -15,6 +15,8 @@ type long struct {
 	Long_url string `json:"long_url"`
 }
 
+var c = false
+
 func Urlshortner(w http.ResponseWriter, r *http.Request) {
 
 	var url long
@@ -23,18 +25,30 @@ func Urlshortner(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalf("failed to decode r.Body into long")
 	}
-
-	// The package `shortid` enables the generation of short,
-	// fully unique, non-sequential and by default URL friendly Ids
-	// at a rate of hundreds of thousand per second. It guarantees uniqueness
-	//during the time period until 2050!
-	sid, err := shortid.New(1, shortid.DefaultABC, 2342)
-	urlCode, idErr := sid.Generate()
-	if idErr != nil {
-		log.Fatalf("error while generating unique number")
+	// logic for same code for same url
+	for key := range store {
+		if url.Long_url == store[key] {
+			c = true
+			log.Println("Generated Code : ", key)
+		}
 	}
-	log.Println("Generated Code : ", urlCode)
-	store[urlCode] = url.Long_url //storing the original url corresponding to the generated ID
+
+	if !c {
+		// The package `shortid` enables the generation of short,
+		// fully unique, non-sequential and by default URL friendly Ids
+		// at a rate of hundreds of thousand per second. It guarantees uniqueness
+		//during the time period until 2050!
+		sid, err := shortid.New(1, shortid.DefaultABC, 2342)
+		if err != nil {
+			log.Fatalln("Error while generating code")
+		}
+		urlCode, idErr := sid.Generate()
+		if idErr != nil {
+			log.Fatalf("error while generating unique number")
+		}
+		log.Println("Generated Code : ", urlCode)
+		store[urlCode] = url.Long_url //storing the original url corresponding to the generated ID
+	}
 
 }
 
