@@ -1,43 +1,50 @@
 package handlers
 
 import (
-	"bytes"
-	"crypto/sha1"
-	"encoding/base64"
 	"encoding/json"
-	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/teris-io/shortid"
 )
 
+var store = make(map[string]string)
+
+type long struct {
+	Long_url string `json:"long_url"`
+}
+
 func Urlshortner(w http.ResponseWriter, r *http.Request) {
-	hashed := sha1.New()
-	var longurl string
-	json.NewDecoder(r.Body).Decode(&longurl)
-	// b, err := ioutil.ReadAll(r.Body)
-	// if err != nil {
-	// 	log.Fatal("Exit")
-	// }
-	_, err := io.Copy(
-		hashed,
-		strings.NewReader(longurl),
-	)
+
+	var url long
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&url)
 	if err != nil {
-		log.Fatal("Exit")
+		log.Fatalf("failed to decode r.Body into long")
 	}
 
-	encoded := bytes.NewBuffer([]byte{})
-	_, err = io.Copy(
-		base64.NewEncoder(base64.URLEncoding, encoded),
-		bytes.NewReader(hashed.Sum(nil)),
-	)
-	if err != nil {
-		log.Fatal("Exit")
-		//return "", err
+	// The package `shortid` enables the generation of short,
+	// fully unique, non-sequential and by default URL friendly Ids
+	// at a rate of hundreds of thousand per second. It guarantees uniqueness
+	//during the time period until 2050!
+	sid, err := shortid.New(1, shortid.DefaultABC, 2342)
+	urlCode, idErr := sid.Generate()
+	if idErr != nil {
+		log.Fatalf("error while generating unique number")
 	}
+	log.Println("Generated Code : ", urlCode)
+	store[urlCode] = url.Long_url //storing the original url corresponding to the generated ID
 
-	encoded.Truncate(8)
-	fmt.Printf(encoded.String())
+}
+
+func Redirecturl(w http.ResponseWriter, r *http.Request) {
+
+	var actual_url string
+	path := r.URL.Path
+	p := strings.Split(path, "/")
+	actual_url = store[p[1]]
+	log.Println("actual_url : ", actual_url)
+	http.Redirect(w, r, actual_url, http.StatusPermanentRedirect) // redirect to original url corresponding to the generated ID
+
 }

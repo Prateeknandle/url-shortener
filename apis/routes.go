@@ -16,8 +16,13 @@ type Routes []Route
 
 var routes = Routes{
 	Route{
-		"Post",
-		"/short", // will shorten the url
+		"POST",
+		"/short", // will shorten the URL
 		handlers.Urlshortner,
+	},
+	Route{
+		"GET",
+		"/{key}", // redirect to actual URL from shorten URL
+		handlers.Redirecturl,
 	},
 }
