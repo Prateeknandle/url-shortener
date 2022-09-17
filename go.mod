@@ -1,4 +1,4 @@
-module github.com/Prateeknandle/url-shortner
+module github.com/Prateeknandle/url-shortener
 
 go 1.19
 
