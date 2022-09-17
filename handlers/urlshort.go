@@ -20,16 +20,17 @@ var c = false
 func Urlshortner(w http.ResponseWriter, r *http.Request) {
 
 	var url long
+	urlstr := "http://localhost:3000/"
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&url)
 	if err != nil {
 		log.Fatalf("failed to decode r.Body into long")
 	}
-	// logic for same code for same url
+	// logic for same short url if  same url is passed
 	for key := range store {
 		if url.Long_url == store[key] {
 			c = true
-			log.Println("Generated Code : ", key)
+			log.Println("Generated Short Link : ", urlstr+key)
 		}
 	}
 
@@ -46,8 +47,8 @@ func Urlshortner(w http.ResponseWriter, r *http.Request) {
 		if idErr != nil {
 			log.Fatalf("error while generating unique number")
 		}
-		log.Println("Generated Code : ", urlCode)
-		store[urlCode] = url.Long_url //storing the original url corresponding to the generated ID
+		log.Println("Generated Short Link : ", urlstr+urlCode)
+		store[urlCode] = url.Long_url //storing the original url corresponding to the short url
 	}
 
 }
