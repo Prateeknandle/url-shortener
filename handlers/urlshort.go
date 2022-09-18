@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+
 	"log"
 	"net/http"
 	"os"
@@ -47,7 +48,7 @@ func Urlshortner(w http.ResponseWriter, r *http.Request) {
 	// }
 	data, err := os.ReadFile("data.txt")
 	if err != nil {
-		log.Fatalf("can't read the file")
+		log.Println("can't read the file")
 	}
 	set := strings.FieldsFunc(string(data), Split)
 	for k, v := range set {

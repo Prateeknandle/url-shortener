@@ -24,8 +24,8 @@ Follow the following steps:
 Follow the following steps, if using docker image:
  
 1. Link to Docker image - `https://hub.docker.com/r/prateeknandle/docker-gs-ping`
-2. Use `docker pull prateeknandle/docker-gs-ping` to pull the image of the application.
-3. Run `docker run -p 3000:3000 prateeknandle/docker-gs-ping` to start the server. PORT - 3000
+2. Use `docker pull prateeknandle/docker-gs-ping:v3` to pull the image of the application, please use latest version - `v3`
+3. Run `docker run -p 3000:3000 prateeknandle/docker-gs-ping:v3` to start the server. PORT - 3000
 4. Go to 5th point written above and follow the steps below it.
 
 # Functionalities
