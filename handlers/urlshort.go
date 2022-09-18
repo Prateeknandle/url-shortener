@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -46,7 +45,7 @@ func Urlshortner(w http.ResponseWriter, r *http.Request) {
 	// 		log.Println("Generated Short Link : ", urlstr+key)
 	// 	}
 	// }
-	data, err := ioutil.ReadFile("data.txt")
+	data, err := os.ReadFile("data.txt")
 	if err != nil {
 		log.Fatalf("can't read the file")
 	}
@@ -96,7 +95,7 @@ func Redirecturl(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 	p := strings.Split(path, "/")
 	//actual_url = store[p[1]]
-	data, _ := ioutil.ReadFile("data.txt")
+	data, _ := os.ReadFile("data.txt")
 	set := strings.FieldsFunc(string(data), Split)
 	for k, v := range set {
 		if v == p[1] {
