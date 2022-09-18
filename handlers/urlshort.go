@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"regexp"
 	"strings"
@@ -24,7 +25,7 @@ func Split(r rune) bool {
 
 var urlstr = "http://localhost:3000/"
 
-var valid_url = regexp.MustCompile(`((http|https)://)(www.)?” + “[a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\\.[a-z]” + “{2,6}\\b([-a-zA-Z0-9@:%._\\+~#?&//=]*)`)
+var valid_url = regexp.MustCompile(`/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/`)
 
 func Urlshortner(w http.ResponseWriter, r *http.Request) {
 
@@ -35,8 +36,8 @@ func Urlshortner(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalf("failed to decode r.Body into long")
 	}
-	valid := valid_url.MatchString(url.Long_url)
-	if !valid {
+	err = Validation(url.Long_url)
+	if err != nil {
 		log.Fatalln("given long_url is not a valid url")
 	}
 	// logic for same short url if  same url is passed
@@ -102,4 +103,12 @@ func Redirecturl(w http.ResponseWriter, r *http.Request) {
 	}
 	http.Redirect(w, r, actual_url, http.StatusPermanentRedirect) // redirect to original url corresponding to the generated ID
 
+}
+
+func Validation(urlv string) error {
+	_, err := url.ParseRequestURI(urlv)
+	if err != nil {
+		panic(err)
+	}
+	return nil
 }
