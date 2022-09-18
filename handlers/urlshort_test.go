@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_Url_Validation(t *testing.T) {
@@ -11,9 +13,9 @@ func Test_Url_Validation(t *testing.T) {
 		t.Errorf("Error : %v", err)
 	}
 
-	url = []byte("htt://github.com/")
+	url = []byte("http://github.com")
 	err = Validation(string(url))
 	if err != nil {
-		t.FailNow()
+		assert.Error(t, err)
 	}
 }

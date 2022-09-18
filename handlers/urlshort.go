@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 	"regexp"
 	"strings"
@@ -25,7 +24,7 @@ func Split(r rune) bool {
 
 var urlstr = "http://localhost:3000/"
 
-var valid_url = regexp.MustCompile(`/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/`)
+var valid_url = regexp.MustCompile(`^((ftp|http|https):\/\/)?(\S+(:\S*)?@)?((([1-9]\d?|1\d\d|2[01]\d|22[0-3])(\.(1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.([0-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(((([a-z\x{00a1}-\x{ffff}0-9]+-?-?_?)*[a-z\x{00a1}-\x{ffff}0-9]+)\.)?)?(([a-z\x{00a1}-\x{ffff}0-9]+-?-?_?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.([a-z\x{00a1}-\x{ffff}]{2,}))?)|localhost)(:(\d{1,5}))?((\/|\?|#)[^\s]*)?$`)
 
 func Urlshortner(w http.ResponseWriter, r *http.Request) {
 
@@ -48,6 +47,9 @@ func Urlshortner(w http.ResponseWriter, r *http.Request) {
 	// 	}
 	// }
 	data, err := ioutil.ReadFile("data.txt")
+	if err != nil {
+		log.Fatalf("can't read the file")
+	}
 	set := strings.FieldsFunc(string(data), Split)
 	for k, v := range set {
 		if v == url.Long_url {
@@ -106,9 +108,9 @@ func Redirecturl(w http.ResponseWriter, r *http.Request) {
 }
 
 func Validation(urlv string) error {
-	_, err := url.ParseRequestURI(urlv)
-	if err != nil {
-		panic(err)
+	valid := valid_url.MatchString(urlv)
+	if !valid {
+		log.Fatalln("given long_url is not a valid url")
 	}
 	return nil
 }
