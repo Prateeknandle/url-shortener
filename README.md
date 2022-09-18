@@ -34,7 +34,7 @@ Our server doesn't use any database to store the url, but rather we use `data.tx
 
 `apis` package handles the router and routes. Currently in keeping mind of the problem statement, only two routes are defined. One for shortening the url and other one for using the shortened url.
 
-`handlers` packege contains the implementaion for shortening the url, handling data storage in the dynamic file, redirecting the user to the actual url when they use the shortened url and proving the same shortened url if they again ask short url for which the short url is already generated and stored in the dynamic file.
+`handlers` packege contains the implementaion for shortening the url, handling data storage in the dynamic file, redirecting the user to the actual url when they use the shortened url, validating the url and proving the same shortened url if they again ask short url for which the short url is already generated and stored in the dynamic file.
 
 To shorten the url, we've used package `github.com/teris-io/shortid`, it enables the generation of short, fully unique, non-sequential and by default URL friendly Ids at a rate of hundreds of thousand per second. It guarantees uniqueness during the time period until 2050!
 

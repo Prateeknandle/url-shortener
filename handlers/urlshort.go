@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/teris-io/shortid"
@@ -23,6 +24,8 @@ func Split(r rune) bool {
 
 var urlstr = "http://localhost:3000/"
 
+var valid_url = regexp.MustCompile(`((http|https)://)(www.)?” + “[a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\\.[a-z]” + “{2,6}\\b([-a-zA-Z0-9@:%._\\+~#?&//=]*)`)
+
 func Urlshortner(w http.ResponseWriter, r *http.Request) {
 
 	var c = false
@@ -31,6 +34,10 @@ func Urlshortner(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&url)
 	if err != nil {
 		log.Fatalf("failed to decode r.Body into long")
+	}
+	valid := valid_url.MatchString(url.Long_url)
+	if !valid {
+		log.Fatalln("given long_url is not a valid url")
 	}
 	// logic for same short url if  same url is passed
 	// for key := range store {
