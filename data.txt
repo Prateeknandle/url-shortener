@@ -1,2 +1,0 @@
-http://localhost:3000/qVYDSZ4tp = https://stackoverflow.com/questions/7151261/append-to-a-file-in-go;
-http://localhost:3000/TzwYZSfaM = https://github.com/kyverno/kyverno;
