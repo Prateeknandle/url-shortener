@@ -45,6 +45,7 @@ func Urlshortner(w http.ResponseWriter, r *http.Request) {
 		if v == url.Long_url {
 			c = true
 			log.Println("Generated Short Link : ", urlstr+set[k-1])
+			w.Write([]byte(urlstr + set[k-1]))
 		}
 	}
 
@@ -75,6 +76,7 @@ func Urlshortner(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal(err)
 		}
+		w.Write([]byte(urlstr + urlCode))
 	}
 }
 
