@@ -18,7 +18,7 @@ Follow the following steps:
     "Long_url":"https://gobyexample.com"
 }
 ```
-8. After we send this request we'll get the shortened url in response.
+8. After we send this request we'll get the shortened url in response(also printed in terminal).
 9. Use the short url, and run it on your respective browser, it'll redirect to the original url.
 
 Follow the following steps, if using docker image:
@@ -41,3 +41,8 @@ To shorten the url, we've used package `github.com/teris-io/shortid`, it enables
 # Other details
 
 We've used GO version - `go1.19 linux/amd64`
+
+# Limitations
+
+1. Scalabilty - If there are multiple requests in large volume, then our single server can't handle them alone. Although we can use loadbalancer and create multiple instances of the server depending on the requests volume. If our server is deployed on cloud and we're using kubernetes, then we can use ingress for handling requests.
+2. Limited Storage capacity - As we're storing the url in the file on our system(which has less storage), which can affect the storage limit.
