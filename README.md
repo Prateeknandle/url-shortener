@@ -1,6 +1,6 @@
 # URL-SHORTENER
 
-A basic URL shortener application which provides the shorten url for the actual url. It stores the shorteb url in `data.txt` file, corresponding to its actual/original url. 
+A URL shortener application that provides the shortened URL for the actual URL. It stores the shortened URL in a `data.txt` file, corresponding to its actual/original URL. 
 
 # Setting - up
 
